@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UserGitHub</string>
+
+    <string name="search_hint">Cari Pengguna</string>
+    <string name="list_title">Pengguna GitHub DiCoding</string>
+    <string name="user_photo">Foto Pengguna</string>
+    <string name="search">Cari</string>
+
+    <string name="content_description_user_photo">Foto Detail Pengguna</string>
+    <string name="content_description_splash_screen">Logo Screen Awal</string>
+
+    <string name="gists">Publik Gists</string>
+    <string name="repository">Repositori</string>
+    <string name="follower">Pengikut</string>
+    <string name="following">Mengikuti</string>
+</resources>
