@@ -1,6 +1,5 @@
 package com.example.usergithub.viewmodel
 
-import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
