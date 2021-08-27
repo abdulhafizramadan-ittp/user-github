@@ -21,7 +21,6 @@ android {
     buildTypes {
         debug {
             buildConfigField 'String', "GITHUB_TOKEN", github_token
-//            buildConfigField 'String', "GITHUB_TOKEN", github_token
         }
         release {
             minifyEnabled false

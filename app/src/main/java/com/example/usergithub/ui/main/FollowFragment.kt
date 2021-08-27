@@ -1,7 +1,6 @@
 package com.example.usergithub.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.usergithub.R
 import com.example.usergithub.adapter.FollowAdapter
 import com.example.usergithub.databinding.FragmentFollowBinding
 import com.example.usergithub.viewmodel.FollowViewModel
