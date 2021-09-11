@@ -1,4 +1,4 @@
-package com.example.usergithub
+package com.ahr.usergithub
 
 import org.junit.Test
 
