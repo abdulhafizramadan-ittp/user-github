@@ -14,4 +14,8 @@
     <string name="follower">Follower</string>
     <string name="following">Following</string>
     <string name="content_description_add_to_favorite">Button Add To Favorite</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

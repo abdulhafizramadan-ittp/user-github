@@ -8,6 +8,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.usergithub.R
@@ -41,7 +43,7 @@ class ListFragment : Fragment() {
         }
 
 
-        listViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
+        listViewModel = ViewModelProvider(activity as ViewModelStoreOwner, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
         if (listViewModel.getListUser().value == null) {
             listViewModel.setListUser(activity as FragmentActivity, toggleLoading)
         }

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/splashScreenFragment">
+    app:startDestination="@id/navigation_home">
     <fragment
-        android:id="@+id/listFragment"
+        android:id="@+id/navigation_home"
         android:name="com.ahr.usergithub.ui.main.ListFragment"
         android:label="fragment_list"
         tools:layout="@layout/fragment_list" >
@@ -26,12 +26,10 @@
         android:id="@+id/splashScreenFragment"
         android:name="com.ahr.usergithub.ui.main.SplashScreenFragment"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" >
-        <action
-            android:id="@+id/action_splashScreenFragment_to_listFragment"
-            app:destination="@id/listFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/splashScreenFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_splash_screen" />
+    <fragment
+        android:id="@+id/navigation_favorite"
+        android:name="com.ahr.usergithub.ui.main.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
 </navigation>
