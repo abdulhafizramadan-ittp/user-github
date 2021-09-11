@@ -7,19 +7,9 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.main.ListFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?android:windowBackground"
-            android:elevation="1dp"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:title="@string/list_title" />
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/include_appbar"
+        layout="@layout/app_bar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

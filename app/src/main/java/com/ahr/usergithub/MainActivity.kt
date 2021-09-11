@@ -27,10 +27,10 @@ class MainActivity : AppCompatActivity() {
 
         navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.detailFragment) {
-                navView.visibility = View.GONE
-            } else {
+            if (destination.id == R.id.navigation_home || destination.id == R.id.navigation_favorite) {
                 navView.visibility = View.VISIBLE
+            } else {
+                navView.visibility = View.GONE
             }
         }
     }

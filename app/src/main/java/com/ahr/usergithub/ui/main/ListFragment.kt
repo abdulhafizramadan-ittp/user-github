@@ -3,6 +3,7 @@ package com.ahr.usergithub.ui.main
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -37,9 +38,15 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.apply {
+        binding.includeAppbar.toolbar.apply {
             inflateMenu(R.menu.list_menu)
-            setSearchAction(menu)
+            setOnMenuItemClickListener { menuItem ->
+                if (menuItem.itemId == R.id.action_search) {
+                    Navigation.findNavController(binding.root).navigate(R.id.action_navigation_home_to_searchFragment)
+                }
+                true
+            }
+//            setSearchAction(menu)
         }
 
 
@@ -69,26 +76,26 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun setSearchAction(menu: Menu?) {
-        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
-
-        searchView.apply {
-            setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-            queryHint = getString(R.string.search_hint)
-        }
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                listViewModel.setListUser(activity as Context, query as String, toggleLoading)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
-    }
+//    private fun setSearchAction(menu: Menu?) {
+//        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
+//
+//        searchView.apply {
+//            setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+//            queryHint = getString(R.string.search_hint)
+//        }
+//
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                listViewModel.setListUser(activity as Context, query as String, toggleLoading)
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//        })
+//    }
 
     fun toDetailFragment(user: User) {
         val toDetailFragment = ListFragmentDirections.actionListFragmentToDetailFragment(user)
@@ -105,5 +112,9 @@ class ListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object {
+        private const val TAG = "ListFragment"
     }
 }
