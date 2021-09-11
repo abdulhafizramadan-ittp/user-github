@@ -6,7 +6,7 @@
     app:startDestination="@id/splashScreenFragment">
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.example.usergithub.ListFragment"
+        android:name="com.ahr.usergithub.ListFragment"
         android:label="fragment_list"
         tools:layout="@layout/fragment_list" >
         <action
@@ -15,16 +15,16 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.usergithub.DetailFragment"
+        android:name="com.ahr.usergithub.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="user"
-            app:argType="com.example.usergithub.model.User" />
+            app:argType="com.ahr.usergithub.model.User" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.usergithub.SplashScreenFragment"
+        android:name="com.ahr.usergithub.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action
