@@ -6,15 +6,11 @@ internal object DatabaseContract {
     class UserColumns : BaseColumns {
         companion object {
             const val TABLE_NAME = "user"
+            const val USERNAME = "username"
             const val AVATAR = "avatar"
-            const val NAME = "name"
-            const val BIO_DATA = "bio_data"
-            const val PUBLIC_REPOSITORY = "public_repository"
-            const val PUBLIC_GISTS = "public_gists"
-            const val FOLLOWER = "follower"
-            const val FOLLOWING = "following"
-            const val FOLLOWER_API = "follower_api"
-            const val FOLLOWING_API = "following_api"
+            const val API_USER = "api_user"
+            const val API_FOLLOWER = "api_follower"
+            const val API_FOLLOWING = "api_following"
         }
     }
 }

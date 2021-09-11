@@ -4,16 +4,12 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns._ID
+import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_FOLLOWER
+import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_FOLLOWING
+import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_USER
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.AVATAR
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.BIO_DATA
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.FOLLOWER
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.FOLLOWER_API
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.FOLLOWING
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.FOLLOWING_API
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.NAME
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.PUBLIC_GISTS
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.PUBLIC_REPOSITORY
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.TABLE_NAME
+import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.USERNAME
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -32,16 +28,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
         private const val SQL_CREATE_TABLE_USER = "CREATE TABLE $TABLE_NAME " +
             "(" +
-                "$$_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$AVATAR TEXT NOT NULL," +
-                "$NAME TEXT NOT NULL," +
-                "$BIO_DATA TEXT NOT NULL," +
-                "$PUBLIC_REPOSITORY INTEGER NOT NULL," +
-                "$PUBLIC_GISTS INTEGER NOT NULL," +
-                "$FOLLOWER INTEGER NOT NULL," +
-                "$FOLLOWING FOLLOWING NOT NULL," +
-                "$FOLLOWER_API TEXT NOT NULL," +
-                "$FOLLOWING_API TEXT NOT NULL," +
+                "$_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$USERNAME VARCHAR(100) NOT NULL," +
+                "$AVATAR VARCHAR(250) NOT NULL," +
+                "$API_USER VARCHAR(250) NOT NULL," +
+                "$API_FOLLOWER VARCHAR(250) NOT NULL," +
+                "$API_FOLLOWING VARCHAR(250) NOT NULL" +
             ")"
 
         private const val SQL_DROP_TABLE_USER = "DROP TABLE IF EXISTS $TABLE_NAME"

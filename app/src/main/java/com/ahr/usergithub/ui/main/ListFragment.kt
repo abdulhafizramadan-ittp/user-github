@@ -1,4 +1,4 @@
-package com.ahr.usergithub
+package com.ahr.usergithub.ui.main
 
 import android.app.SearchManager
 import android.content.Context
@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ahr.usergithub.R
 import com.ahr.usergithub.adapter.ListAdapter
 import com.ahr.usergithub.databinding.FragmentListBinding
 import com.ahr.usergithub.model.User

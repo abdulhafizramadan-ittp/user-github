@@ -5,7 +5,9 @@
       <map>
         <entry key="app/src/main/res/drawable/bg_share_button.xml" value="0.22708333333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.39739583333333334" />
+        <entry key="app/src/main/res/drawable/ic_favorite.xml" value="0.3896833503575077" />
         <entry key="app/src/main/res/drawable/ic_icon.xml" value="0.39739583333333334" />
+        <entry key="app/src/main/res/drawable/ic_unfavorite.xml" value="0.3896833503575077" />
         <entry key="app/src/main/res/drawable/tab_layout_backgroud.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/drawable/tab_layout_background.xml" value="0.39739583333333334" />
         <entry key="app/src/main/res/drawable/tablayout_background.xml" value="0.39739583333333334" />
