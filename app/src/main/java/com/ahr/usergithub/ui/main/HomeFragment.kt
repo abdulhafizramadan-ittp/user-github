@@ -47,13 +47,17 @@ class HomeFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> toSearchFragment()
-            R.id.action_setting -> Log.d("TAG", "onOptionsItemSelected: action setting")
+            R.id.action_setting -> toSettingScreen()
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun toSearchFragment() {
         Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_searchFragment)
+    }
+
+    private fun toSettingScreen() {
+        Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_settingPreferences)
     }
 
     override fun onDestroy() {

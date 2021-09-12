@@ -30,6 +30,9 @@
             app:destination="@id/searchFragment"
             app:enterAnim="@anim/anim_bottom_to_top"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingPreferences"
+            app:destination="@id/settingPreferences" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -49,4 +52,8 @@
             android:id="@+id/action_searchFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingPreferences"
+        android:name="com.ahr.usergithub.preferences.SettingPreferences"
+        android:label="SettingPreferences" />
 </navigation>

@@ -20,4 +20,6 @@
 
     <string name="user_github">Pengguna Github</string>
     <string name="user_favorite">Pengguna Favorit</string>
+    <string name="daily_reminder">Aktifkan pengingat di jam 09:00 am</string>
+    <string name="key_daily">daily_reminder</string>
 </resources>
