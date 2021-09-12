@@ -3,20 +3,26 @@ package com.ahr.usergithub.ui.main
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
-import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.usergithub.MainActivity
-import com.ahr.usergithub.R
+import com.ahr.usergithub.adapter.ListAdapter
 import com.ahr.usergithub.databinding.FragmentSearchBinding
+import com.ahr.usergithub.model.User
+import com.ahr.usergithub.viewmodel.ListViewModel
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter: ListAdapter
+    private lateinit var listViewModel: ListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,20 +40,43 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        listViewModel = ViewModelProvider(this as ViewModelStoreOwner, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
+
         binding.tieSearch.apply {
+            requestFocus()
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    Log.d(TAG, "onTextChanged: $s")
+                    listViewModel.setListUser(activity as FragmentActivity, s.toString(), toggleLoading)
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    Log.d(TAG, "afterTextChanged: $s")
+
                 }
             })
+        }
+
+        adapter = ListAdapter()
+        adapter.notifyDataSetChanged()
+        adapter.setOnItemClickCallback(object : ListAdapter.OnItemClickCallback {
+            override fun onItemClicked(user: User) {
+                toDetailFragment(user)
+            }
+        })
+
+        binding.apply {
+            rvUsers.adapter = adapter
+            rvUsers.layoutManager = LinearLayoutManager(activity)
+        }
+
+        listViewModel.getListUser().observe(viewLifecycleOwner) { listUser ->
+            if (listUser != null) {
+                adapter.setListUser(listUser)
+            }
         }
     }
 
@@ -58,11 +87,17 @@ class SearchFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//        inflater.inflate(R.menu.search_menu, menu)
-//        menu.performIdentifierAction(R.id.search_action, 0)
-//    }
+    private fun toDetailFragment(user: User) {
+        val  toDetailFragment = SearchFragmentDirections.actionSearchFragmentToDetailFragment(user)
+        Navigation.findNavController(binding.root).navigate(toDetailFragment)
+    }
+
+    private val toggleLoading: (Boolean) -> Unit = { state: Boolean ->
+        when(state) {
+            true -> binding.progressBar.visibility = View.VISIBLE
+            else -> binding.progressBar.visibility = View.INVISIBLE
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()

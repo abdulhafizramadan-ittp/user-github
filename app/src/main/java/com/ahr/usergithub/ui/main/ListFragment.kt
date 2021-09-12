@@ -1,18 +1,14 @@
 package com.ahr.usergithub.ui.main
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ahr.usergithub.MainActivity
 import com.ahr.usergithub.R
 import com.ahr.usergithub.adapter.ListAdapter
 import com.ahr.usergithub.databinding.FragmentListBinding
@@ -32,23 +28,13 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
+        (activity as MainActivity).setSupportActionBar(binding.includeAppbar.toolbar)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.includeAppbar.toolbar.apply {
-            inflateMenu(R.menu.list_menu)
-            setOnMenuItemClickListener { menuItem ->
-                if (menuItem.itemId == R.id.action_search) {
-                    Navigation.findNavController(binding.root).navigate(R.id.action_navigation_home_to_searchFragment)
-                }
-                true
-            }
-//            setSearchAction(menu)
-        }
-
 
         listViewModel = ViewModelProvider(activity as ViewModelStoreOwner, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
         if (listViewModel.getListUser().value == null) {
@@ -74,6 +60,18 @@ class ListFragment : Fragment() {
                 adapter.setListUser(listUser)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.list_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_search) {
+            Navigation.findNavController(binding.root).navigate(R.id.action_navigation_home_to_searchFragment)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 //    private fun setSearchAction(menu: Menu?) {
