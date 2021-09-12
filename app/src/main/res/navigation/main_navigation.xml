@@ -21,5 +21,18 @@
         android:id="@+id/homeFragment"
         android:name="com.ahr.usergithub.ui.main.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_detailFragment"
+            app:destination="@id/detailFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment2"
+        android:name="com.ahr.usergithub.ui.main.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="user"
+            app:argType="com.ahr.usergithub.model.User" />
+    </fragment>
 </navigation>

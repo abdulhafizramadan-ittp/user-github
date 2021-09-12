@@ -58,6 +58,7 @@ class ListViewModel : ViewModel() {
 
                     toggleLoading(false)
                     listUser.postValue(list)
+                    Log.d("ListViewModel", "setUserFromApi: list = $list")
                 } catch (err: Exception) {
                     toggleLoading(false)
                     Toast.makeText(context, err.message, Toast.LENGTH_SHORT).show()

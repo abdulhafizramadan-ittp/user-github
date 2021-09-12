@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.usergithub.adapter.ListAdapter
 import com.ahr.usergithub.databinding.FragmentUserBinding
@@ -41,17 +42,18 @@ class UserFragment : Fragment() {
         if (listViewModel.getListUser().value == null) {
             if (type == HOME_TYPES[0]) {
                 listViewModel.setUserFromApi(activity as FragmentActivity, toggleLoading)
-            } else {
-                listViewModel.setUserFromLocal(activity as FragmentActivity, toggleLoading)
             }
+        }
+
+        if (type == HOME_TYPES[1]) {
+            listViewModel.setUserFromLocal(activity as FragmentActivity, toggleLoading)
         }
 
         adapter = ListAdapter()
         adapter.notifyDataSetChanged()
         adapter.setOnItemClickCallback(object : ListAdapter.OnItemClickCallback {
             override fun onItemClicked(user: User) {
-//                toDetailFragment(user)
-                Log.d(TAG, "onItemClicked: user = $user")
+                toDetailFragment(user)
             }
         })
 
@@ -67,10 +69,10 @@ class UserFragment : Fragment() {
         }
     }
 
-//    fun toDetailFragment(user: User) {
-//        val toDetailFragment = UserFragmentDirection.actionListFragmentToDetailFragment(user)
-//        Navigation.findNavController(binding.rvUsers).navigate(toDetailFragment)
-//    }
+    fun toDetailFragment(user: User) {
+        val toDetailFragment = HomeFragmentDirections.actionHomeFragmentToDetailFragment(user)
+        Navigation.findNavController(binding.root).navigate(toDetailFragment)
+    }
 
     private val toggleLoading: (Boolean) -> Unit = { state: Boolean ->
         when(state) {
