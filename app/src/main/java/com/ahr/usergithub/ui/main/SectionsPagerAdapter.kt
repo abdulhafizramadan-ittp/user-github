@@ -1,21 +1,19 @@
 package com.ahr.usergithub.ui.main
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class SectionsPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    private val urls = arrayListOf<String>()
+    private val types = arrayOf(
+        "from_api",
+        "from_local"
+    )
 
-    override fun getItemCount(): Int = urls.size
+    override fun getItemCount(): Int = types.size
 
-    override fun createFragment(position: Int): Fragment {
-        return FollowFragment.newInstance(urls[position])
-    }
-
-    fun setUrl(url: String) {
-        urls.add(url)
-    }
+    override fun createFragment(position: Int): Fragment = UserFragment.newInstance(types[position])
 }

@@ -13,4 +13,11 @@
     <string name="repository">Repositori</string>
     <string name="follower">Pengikut</string>
     <string name="following">Mengikuti</string>
+    <string name="content_description_add_to_favorite">Tombol tambah ke favorit</string>
+    <string name="home">Beranda</string>
+    <string name="favorite">Favorit</string>
+    <string name="setting">Setelan</string>
+
+    <string name="user_github">Pengguna Github</string>
+    <string name="user_favorite">Pengguna Favorit</string>
 </resources>

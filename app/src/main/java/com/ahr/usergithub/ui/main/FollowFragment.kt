@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +32,7 @@ class FollowFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val url = arguments?.getString(ARG_URL)
+        val url = arguments?.getString(ARGUMENT_URL)
 
         followViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowViewModel::class.java)
         if (followViewModel.getListFollow().value == null) {
@@ -68,14 +69,12 @@ class FollowFragment : Fragment() {
 
     companion object {
 
-        private const val ARG_URL ="arg_url"
+        private const val ARGUMENT_URL ="arg_url"
 
         @JvmStatic
         fun newInstance(url: String) =
             FollowFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_URL, url)
-                }
+                arguments = bundleOf(ARGUMENT_URL to url)
             }
     }
 }

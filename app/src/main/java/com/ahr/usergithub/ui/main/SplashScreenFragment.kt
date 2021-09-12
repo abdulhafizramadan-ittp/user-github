@@ -28,7 +28,12 @@ class SplashScreenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_navigation_home)
+            Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_homeFragment)
         }, 2000)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

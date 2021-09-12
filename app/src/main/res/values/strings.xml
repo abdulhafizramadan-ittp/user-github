@@ -16,5 +16,7 @@
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>
     <string name="setting">Setting</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="user_github">User Github</string>
+    <string name="user_favorite">User Favorite</string>
 </resources>
