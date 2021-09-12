@@ -15,5 +15,6 @@
     <string name="content_description_add_to_favorite">Button Add To Favorite</string>
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>
+    <string name="setting">Setting</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

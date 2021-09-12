@@ -3,6 +3,7 @@ package com.ahr.usergithub
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -19,18 +20,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.fragmentContainerView)
+        setSupportActionBar(binding.toolbar)
 
-        navView.setupWithNavController(navController)
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.navigation_home || destination.id == R.id.navigation_favorite) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    navView.visibility = View.VISIBLE
-                }, 500)
-            } else {
-                navView.visibility = View.GONE
-            }
-        }
+        val navController = findNavController(R.id.fragmentContainerView)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.list_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 }

@@ -28,8 +28,6 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
-        (activity as MainActivity).setSupportActionBar(binding.includeAppbar.toolbar)
-        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -60,18 +58,6 @@ class ListFragment : Fragment() {
                 adapter.setListUser(listUser)
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.list_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_search) {
-            Navigation.findNavController(binding.root).navigate(R.id.action_navigation_home_to_searchFragment)
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     fun toDetailFragment(user: User) {
