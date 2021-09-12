@@ -1,14 +1,11 @@
 package com.ahr.usergithub
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ahr.usergithub.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,7 +25,9 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_home || destination.id == R.id.navigation_favorite) {
-                navView.visibility = View.VISIBLE
+                Handler(Looper.getMainLooper()).postDelayed({
+                    navView.visibility = View.VISIBLE
+                }, 500)
             } else {
                 navView.visibility = View.GONE
             }

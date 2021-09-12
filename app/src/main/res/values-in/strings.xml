@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">UserGitHub</string>
 
-    <string name="search_hint">Cari Pengguna</string>
     <string name="list_title">Pengguna GitHub DiCoding</string>
     <string name="user_photo">Foto Pengguna</string>
     <string name="search">Cari</string>

@@ -4,12 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +23,6 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private var username = ""
     private lateinit var inputMethodManager: InputMethodManager
 
     private lateinit var adapter: ListAdapter
@@ -55,32 +50,19 @@ class SearchFragment : Fragment() {
         inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         Handler(Looper.getMainLooper()).postDelayed({
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+            toggleKeyboard(true)
         }, 600)
 
         binding.tieSearch.apply {
             requestFocus()
             setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER)
             setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == KeyEvent.KEYCODE_ENTER && username.isNotEmpty()) {
-                    listViewModel.setListUser(activity as FragmentActivity, username, toggleLoading)
-
+                if (actionId == KeyEvent.KEYCODE_ENTER && binding.tieSearch.text.toString().isNotEmpty()) {
+                    listViewModel.setListUser(activity as FragmentActivity, binding.tieSearch.text.toString(), toggleLoading)
+                    toggleKeyboard(false)
                 }
                 true
             }
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    username = s.toString()
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-
-                }
-            })
         }
 
         adapter = ListAdapter()
@@ -105,6 +87,7 @@ class SearchFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
+            toggleKeyboard(false)
             activity?.onBackPressed()
         }
         return super.onOptionsItemSelected(item)
@@ -113,6 +96,13 @@ class SearchFragment : Fragment() {
     private fun toDetailFragment(user: User) {
         val  toDetailFragment = SearchFragmentDirections.actionSearchFragmentToDetailFragment(user)
         Navigation.findNavController(binding.root).navigate(toDetailFragment)
+    }
+
+    private fun toggleKeyboard(state: Boolean) {
+        when (state) {
+            true -> inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+            else -> inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+        }
     }
 
     private val toggleLoading: (Boolean) -> Unit = { state: Boolean ->
@@ -124,7 +114,6 @@ class SearchFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
         _binding = null
     }
 }

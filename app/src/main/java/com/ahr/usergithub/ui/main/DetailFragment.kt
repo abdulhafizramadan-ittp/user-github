@@ -1,9 +1,7 @@
 package com.ahr.usergithub.ui.main
 
-import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +20,6 @@ import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.AVATAR
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.USERNAME
 import com.ahr.usergithub.database.UserHelper
 import com.ahr.usergithub.databinding.FragmentDetailBinding
-import com.ahr.usergithub.model.User
 import com.bumptech.glide.Glide
 import com.ahr.usergithub.model.UserDetail
 import com.ahr.usergithub.viewmodel.DetailViewModel
@@ -162,7 +159,6 @@ class DetailFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "DetailFragment"
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.follower,

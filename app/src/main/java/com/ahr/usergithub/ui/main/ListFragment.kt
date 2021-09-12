@@ -74,27 +74,6 @@ class ListFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-//    private fun setSearchAction(menu: Menu?) {
-//        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
-//
-//        searchView.apply {
-//            setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-//            queryHint = getString(R.string.search_hint)
-//        }
-//
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                listViewModel.setListUser(activity as Context, query as String, toggleLoading)
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//        })
-//    }
-
     fun toDetailFragment(user: User) {
         val toDetailFragment = ListFragmentDirections.actionListFragmentToDetailFragment(user)
         Navigation.findNavController(binding.rvUsers).navigate(toDetailFragment)
@@ -110,9 +89,5 @@ class ListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    companion object {
-        private const val TAG = "ListFragment"
     }
 }
