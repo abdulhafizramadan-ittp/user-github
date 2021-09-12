@@ -2,6 +2,8 @@ package com.ahr.usergithub.ui.main
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -26,6 +28,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var username = ""
+    private lateinit var inputMethodManager: InputMethodManager
 
     private lateinit var adapter: ListAdapter
     private lateinit var listViewModel: ListViewModel
@@ -49,9 +52,11 @@ class SearchFragment : Fragment() {
 
         listViewModel = ViewModelProvider(this as ViewModelStoreOwner, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
 
-        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-//        inputMethodManager.showSoftInput(binding.tieSearch, InputMethodManager.SHOW_IMPLICIT)
+        inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        }, 600)
 
         binding.tieSearch.apply {
             requestFocus()
@@ -119,6 +124,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
         _binding = null
     }
 }
