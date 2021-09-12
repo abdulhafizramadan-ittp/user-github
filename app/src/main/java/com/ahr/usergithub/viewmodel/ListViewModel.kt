@@ -1,23 +1,31 @@
 package com.ahr.usergithub.viewmodel
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ahr.usergithub.BuildConfig
+import com.ahr.usergithub.database.UserHelper
+import com.ahr.usergithub.helper.MappingHelper
 import com.ahr.usergithub.model.User
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
 class ListViewModel : ViewModel() {
+
     private val listUser = MutableLiveData<ArrayList<User>>()
 
-    fun setListUser(context: FragmentActivity, toggleLoading: (Boolean) -> Unit) {
+    fun setUserFromApi(context: FragmentActivity, toggleLoading: (Boolean) -> Unit) {
         toggleLoading(true)
 
         val token = BuildConfig.GITHUB_TOKEN
@@ -63,7 +71,7 @@ class ListViewModel : ViewModel() {
         })
     }
 
-    fun setListUser(context: Context, username: String, toggleLoading: (Boolean) -> Unit) {
+    fun setUserFromApi(context: Context, username: String, toggleLoading: (Boolean) -> Unit) {
         toggleLoading(true)
 
         val token = BuildConfig.GITHUB_TOKEN
@@ -108,6 +116,25 @@ class ListViewModel : ViewModel() {
                 Toast.makeText(context, error?.message, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    fun setUserFromLocal(context: Context, toggleLoading: (Boolean) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            toggleLoading(true)
+            val userHelper = UserHelper.getInstance(context)
+            userHelper.open()
+
+            val differedUsers = async {
+                val cursor = userHelper.queryAll()
+                MappingHelper.mapCursorToArrayList(cursor)
+            }
+
+            val notes = differedUsers.await()
+            Log.d("ListViewModel", "setUserFromLocal: notes = $notes")
+            toggleLoading(false)
+            listUser.postValue(notes)
+            userHelper.close()
+        }
     }
 
     fun getListUser(): LiveData<ArrayList<User>> = listUser

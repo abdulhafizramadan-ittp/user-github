@@ -33,7 +33,7 @@ class UserHelper(context: Context) {
             null,
             null,
             null,
-            "$_ID DSC"
+            "$_ID DESC"
         )
     }
 
