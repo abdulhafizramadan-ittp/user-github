@@ -1,10 +1,12 @@
 package com.ahr.usergithub.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.Navigation
 import com.ahr.usergithub.MainActivity
 import com.ahr.usergithub.R
 import com.ahr.usergithub.databinding.FragmentHomeBinding
@@ -40,6 +42,18 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search -> toSearchFragment()
+            R.id.action_setting -> Log.d("TAG", "onOptionsItemSelected: action setting")
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun toSearchFragment() {
+        Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_searchFragment)
     }
 
     override fun onDestroy() {
