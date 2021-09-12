@@ -121,8 +121,4 @@ class SearchFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
-    companion object {
-        private const val TAG = "SearchFragment"
-    }
 }
