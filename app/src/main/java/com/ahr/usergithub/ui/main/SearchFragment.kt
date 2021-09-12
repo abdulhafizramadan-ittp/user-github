@@ -3,7 +3,9 @@ package com.ahr.usergithub.ui.main
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +22,8 @@ class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private var username = ""
 
     private lateinit var adapter: ListAdapter
     private lateinit var listViewModel: ListViewModel
@@ -45,13 +49,21 @@ class SearchFragment : Fragment() {
 
         binding.tieSearch.apply {
             requestFocus()
+            setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER)
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == KeyEvent.KEYCODE_ENTER && username.isNotEmpty()) {
+                    listViewModel.setListUser(activity as FragmentActivity, username, toggleLoading)
+
+                }
+                true
+            }
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    listViewModel.setListUser(activity as FragmentActivity, s.toString(), toggleLoading)
+                    username = s.toString()
                 }
 
                 override fun afterTextChanged(s: Editable?) {
