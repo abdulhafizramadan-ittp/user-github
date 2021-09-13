@@ -3,15 +3,15 @@ package com.ahr.usergithub.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import com.ahr.usergithub.MainActivity
 import com.ahr.usergithub.R
+import com.ahr.usergithub.receiver.AlarmReceiver
 
 class SettingPreferences : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private lateinit var alarmReceiver: AlarmReceiver
 
     private lateinit var dailyReminder: String
     private lateinit var dailyPreference: SwitchPreference
@@ -20,16 +20,19 @@ class SettingPreferences : PreferenceFragmentCompat(),
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
+        alarmReceiver = AlarmReceiver()
+
         dailyReminder = getString(R.string.key_daily)
         dailyPreference = findPreference<SwitchPreference>(dailyReminder) as SwitchPreference
         sharePreferences = preferenceManager.sharedPreferences
 
         dailyPreference.isChecked = sharePreferences.getBoolean(dailyReminder, false)
-        dailyPreference.setOnPreferenceChangeListener { preference, newValue ->
+
+        dailyPreference.setOnPreferenceChangeListener { _, newValue ->
             if (newValue as Boolean) {
-                Toast.makeText(activity, "active", Toast.LENGTH_SHORT).show()
+                alarmReceiver.setDailyReminder(activity as Context)
             } else {
-                Toast.makeText(activity, "un active", Toast.LENGTH_SHORT).show()
+                alarmReceiver.cancelDailyReminder(activity as Context)
             }
             true
         }

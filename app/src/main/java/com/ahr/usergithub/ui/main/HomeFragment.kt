@@ -1,11 +1,9 @@
 package com.ahr.usergithub.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import com.ahr.usergithub.MainActivity
 import com.ahr.usergithub.R

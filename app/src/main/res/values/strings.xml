@@ -20,5 +20,8 @@
     <string name="user_github">User Github</string>
     <string name="user_favorite">User Favorite</string>
     <string name="daily_reminder">Daily Reminder at 09:00 am</string>
-    <string name="key_daily">daily_reminder</string>
+    <string name="key_daily" translatable="false">daily_reminder</string>
+
+    <string name="notification_title">Daily Reminder</string>
+    <string name="notification_description">Let search your favorite user github!</string>
 </resources>
