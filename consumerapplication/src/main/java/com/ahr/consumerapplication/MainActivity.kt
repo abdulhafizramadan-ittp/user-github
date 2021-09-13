@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.consumerapplication.adapter.ListAdapter
 import com.ahr.consumerapplication.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.consumerapplication.databinding.ActivityMainBinding
 import com.ahr.consumerapplication.helper.MappingHelper
+import com.ahr.consumerapplication.viewmodel.ListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -19,11 +21,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ListAdapter
+    private lateinit var listViewModel: ListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        listViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
+
+        if (listViewModel.getListUser().value == null) {
+            listViewModel.setUserFromLocal(this)
+        }
 
         adapter = ListAdapter()
         adapter.notifyDataSetChanged()
@@ -41,25 +50,16 @@ class MainActivity : AppCompatActivity() {
 
         val myObserver = object : ContentObserver(handler) {
             override fun onChange(selfChange: Boolean) {
-                loadUserFromContentProvider()
+                listViewModel.setUserFromLocal(this@MainActivity)
             }
         }
 
         contentResolver.registerContentObserver(CONTENT_URI, true, myObserver)
 
-        loadUserFromContentProvider()
-    }
-
-    private fun loadUserFromContentProvider() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val differedUser = async(Dispatchers.IO) {
-                val cursor = contentResolver.query(CONTENT_URI, null, null, null, null)
-                MappingHelper.mapCursorToArrayList(cursor)
+        listViewModel.getListUser().observe(this) { listUser ->
+            if (listUser != null) {
+                adapter.setListUser(listUser)
             }
-
-            val users = differedUser.await()
-            adapter.setListUser(users)
         }
-
     }
 }
