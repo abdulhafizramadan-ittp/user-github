@@ -1,4 +1,4 @@
-package com.ahr.usergithub.database
+package com.ahr.consumerapplication.database
 
 import android.net.Uri
 import android.provider.BaseColumns
@@ -10,7 +10,7 @@ internal object DatabaseContract {
 
     class UserColumns : BaseColumns {
         companion object {
-            const val TABLE_NAME = "user"
+            private const val TABLE_NAME = "user"
             const val USERNAME = "username"
             const val AVATAR = "avatar"
             const val API_USER = "api_user"

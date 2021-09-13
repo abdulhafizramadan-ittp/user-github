@@ -41,7 +41,7 @@
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="user"
-            app:argType="com.ahr.usergithub.model.User" />
+            app:argType="com.ahr.consumerapplication.model.User" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
