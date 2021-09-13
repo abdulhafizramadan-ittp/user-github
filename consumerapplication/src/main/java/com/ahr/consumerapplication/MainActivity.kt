@@ -10,12 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.consumerapplication.adapter.ListAdapter
 import com.ahr.consumerapplication.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.consumerapplication.databinding.ActivityMainBinding
-import com.ahr.consumerapplication.helper.MappingHelper
 import com.ahr.consumerapplication.viewmodel.ListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
