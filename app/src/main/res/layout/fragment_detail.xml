@@ -40,7 +40,6 @@
                 android:layout_marginBottom="3dp"
                 app:tabBackground="@drawable/tab_background"
                 app:tabIndicator="@color/cool_black"
-                app:tabIndicatorAnimationMode="elastic"
                 android:layout_gravity="bottom"
                 app:tabSelectedTextColor="@color/white"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>

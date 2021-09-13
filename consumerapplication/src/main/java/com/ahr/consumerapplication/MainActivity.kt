@@ -1,11 +1,10 @@
 package com.ahr.consumerapplication
 
 import android.database.ContentObserver
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.consumerapplication.adapter.ListAdapter
 import com.ahr.consumerapplication.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
@@ -59,7 +58,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             val users = differedUser.await()
-            Log.d("MainActivity", "loadUserFromContentProvider: notes = $users")
             adapter.setListUser(users)
         }
 
