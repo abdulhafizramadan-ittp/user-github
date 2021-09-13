@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ahr.usergithub.databinding.ItemUserBinding
+import com.ahr.usergithub.model.User
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ahr.usergithub.model.User
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 

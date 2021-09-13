@@ -1,24 +1,14 @@
 package com.ahr.usergithub.ui.main
 
-import android.database.ContentObserver
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
-import android.util.Log
 import android.view.*
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.ahr.usergithub.MainActivity
 import com.ahr.usergithub.R
-import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.usergithub.databinding.FragmentHomeBinding
-import com.ahr.usergithub.helper.MappingHelper
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -48,18 +38,6 @@ class HomeFragment : Fragment() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = getString(TAB_TITLES[position])
         }.attach()
-
-        val handlerThread = HandlerThread("DataObserver")
-        handlerThread.start()
-        val handler = Handler(handlerThread.looper)
-
-        val myObserver = object : ContentObserver(handler) {
-            override fun onChange(selfChange: Boolean) {
-                getUserFromContentResolver()
-                Log.d("TAG", "onChange: Call")
-            }
-        }
-        mainActivity.contentResolver.registerContentObserver(CONTENT_URI, true, myObserver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -73,18 +51,6 @@ class HomeFragment : Fragment() {
             R.id.action_setting -> toSettingScreen()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun getUserFromContentResolver() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val differedUsers = async(Dispatchers.IO) {
-                val cursor = (activity as MainActivity).contentResolver.query(CONTENT_URI, null, null, null, null)
-                MappingHelper.mapCursorToArrayList(cursor)
-            }
-
-            val users = differedUsers.await()
-            Log.d("TAG", "getUserFromContentResolver: users = $users")
-        }
     }
 
     private fun toSearchFragment() {

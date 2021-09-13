@@ -1,8 +1,8 @@
 package com.ahr.usergithub.ui.main
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.contentValuesOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.ahr.usergithub.R
@@ -17,12 +18,13 @@ import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_FO
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_FOLLOWING
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_USER
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.AVATAR
+import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.USERNAME
 import com.ahr.usergithub.database.UserHelper
 import com.ahr.usergithub.databinding.FragmentDetailBinding
-import com.bumptech.glide.Glide
 import com.ahr.usergithub.model.UserDetail
 import com.ahr.usergithub.viewmodel.DetailViewModel
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailFragment : Fragment() {
@@ -73,23 +75,24 @@ class DetailFragment : Fragment() {
         binding.includeUserDetail.fabFavorite.apply {
             setOnClickListener {
                 if (!isFavorite) {
-                    val result = userHelper.insert(contentValuesOf(
+                    val result = context?.contentResolver?.insert(CONTENT_URI, contentValuesOf(
                         USERNAME to username,
                         AVATAR to avatar,
                         API_USER to apiUser,
                         API_FOLLOWER to apiFollower,
                         API_FOLLOWING to apiFollowing
                     ))
-                    if (result > 0) {
+                    if (result?.lastPathSegment?.toInt() as Int > 0) {
                         toggleFavorite()
+                        Toast.makeText(context as Context, "$username added to favorite", Toast.LENGTH_SHORT).show()
                     }
-                    Toast.makeText(activity as Context, "result = $result", Toast.LENGTH_SHORT).show()
                 } else {
-                    val result = userHelper.deleteByUsername(username)
+                    val deleteWithUsername = Uri.parse("${CONTENT_URI}/$username")
+                    val result = context?.contentResolver?.delete(deleteWithUsername, null, null) as Int
                     if (result > 0) {
                         toggleFavorite()
+                        Toast.makeText(context as Context, "$username remove from favorite", Toast.LENGTH_SHORT).show()
                     }
-                    Toast.makeText(activity as Context, "result = result", Toast.LENGTH_SHORT).show()
                 }
             }
         }

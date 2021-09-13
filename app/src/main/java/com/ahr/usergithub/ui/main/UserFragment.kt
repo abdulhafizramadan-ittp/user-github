@@ -1,17 +1,20 @@
 package com.ahr.usergithub.ui.main
 
+import android.database.ContentObserver
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.usergithub.adapter.ListAdapter
+import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.usergithub.databinding.FragmentUserBinding
 import com.ahr.usergithub.model.User
 import com.ahr.usergithub.viewmodel.ListViewModel
@@ -39,16 +42,6 @@ class UserFragment : Fragment() {
 
         listViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
 
-        if (listViewModel.getListUser().value == null) {
-            if (type == HOME_TYPES[0]) {
-                listViewModel.setUserFromApi(activity as FragmentActivity, toggleLoading)
-            }
-        }
-
-        if (type == HOME_TYPES[1]) {
-            listViewModel.setUserFromLocal(activity as FragmentActivity, toggleLoading)
-        }
-
         adapter = ListAdapter()
         adapter.notifyDataSetChanged()
         adapter.setOnItemClickCallback(object : ListAdapter.OnItemClickCallback {
@@ -60,6 +53,30 @@ class UserFragment : Fragment() {
         binding.apply {
             rvUsers.adapter = adapter
             rvUsers.layoutManager = LinearLayoutManager(activity)
+        }
+
+        when (type) {
+            HOME_TYPES[0] -> {
+                if (listViewModel.getListUser().value == null) {
+                    listViewModel.setUserFromApi(activity as FragmentActivity, toggleLoading)
+                }
+            }
+            HOME_TYPES[1] -> {
+                if (listViewModel.getListUser().value == null) {
+                    listViewModel.setUserFromLocal(activity as FragmentActivity)
+                }
+                val handlerThread = HandlerThread("DataObserver").apply {
+                    start()
+                }
+                val handler = Handler(handlerThread.looper)
+
+                val myObserver = object : ContentObserver(handler) {
+                    override fun onChange(selfChange: Boolean) {
+                        listViewModel.setUserFromLocal(activity as FragmentActivity)
+                    }
+                }
+                context?.contentResolver?.registerContentObserver(CONTENT_URI, true, myObserver)
+            }
         }
 
         listViewModel.getListUser().observe(viewLifecycleOwner) { listUser ->
@@ -83,7 +100,6 @@ class UserFragment : Fragment() {
 
     companion object {
 
-        private const val TAG = "UserFragment"
         private const val ARGUMENT_TYPE = "argument_type"
 
         val HOME_TYPES = arrayOf(

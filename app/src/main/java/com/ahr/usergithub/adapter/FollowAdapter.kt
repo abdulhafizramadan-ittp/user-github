@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ahr.usergithub.databinding.ItemFollowBinding
-import com.bumptech.glide.Glide
 import com.ahr.usergithub.model.User
+import com.bumptech.glide.Glide
 
 class FollowAdapter : RecyclerView.Adapter<FollowAdapter.ViewHolder>() {
 
