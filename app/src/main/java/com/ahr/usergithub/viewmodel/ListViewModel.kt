@@ -2,7 +2,6 @@ package com.ahr.usergithub.viewmodel
 
 import android.content.Context
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +19,7 @@ class ListViewModel : ViewModel() {
 
     private val listUser = MutableLiveData<ArrayList<User>>()
 
-    fun setUserFromApi(context: FragmentActivity, toggleLoading: (Boolean) -> Unit) {
+    fun setUserFromApi(context: Context, toggleLoading: (Boolean) -> Unit) {
         toggleLoading(true)
 
         val token = BuildConfig.GITHUB_TOKEN

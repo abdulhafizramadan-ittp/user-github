@@ -49,7 +49,30 @@ class FollowFragment : Fragment() {
 
         followViewModel.getListFollow().observe(viewLifecycleOwner) { listFollow ->
             if (listFollow != null) {
-                adapter.setFollow(listFollow)
+                when {
+                    listFollow.size > 0 -> {
+                        adapter.setFollow(listFollow)
+                        toggleNotFound(false)
+                    }
+                    else -> toggleNotFound(true)
+                }
+            }
+        }
+    }
+
+    private val toggleNotFound: (Boolean) -> Unit = { state ->
+        when (state) {
+            true -> {
+                binding.apply {
+                    lottieNotFound.visibility = View.VISIBLE
+                    tvNoData.visibility = View.VISIBLE
+                }
+            }
+            else -> {
+                binding.apply {
+                    lottieNotFound.visibility = View.INVISIBLE
+                    tvNoData.visibility = View.INVISIBLE
+                }
             }
         }
     }

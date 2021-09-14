@@ -1,5 +1,6 @@
 package com.ahr.usergithub.ui.main
 
+import android.content.Context
 import android.database.ContentObserver
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +42,31 @@ class UserFragment : Fragment() {
 
         listViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
 
+        when (type) {
+            HOME_TYPES[0] -> {
+                if (listViewModel.getListUser().value == null) {
+                    listViewModel.setUserFromApi(context as Context, toggleLoading)
+                }
+            }
+            HOME_TYPES[1] -> {
+                if (listViewModel.getListUser().value == null) {
+                    listViewModel.setUserFromLocal(context as Context)
+                    toggleNoData(true)
+                }
+                val handlerThread = HandlerThread("DataObserver").apply {
+                    start()
+                }
+                val handler = Handler(handlerThread.looper)
+
+                val myObserver = object : ContentObserver(handler) {
+                    override fun onChange(selfChange: Boolean) {
+                        listViewModel.setUserFromLocal(context as Context)
+                    }
+                }
+                context?.contentResolver?.registerContentObserver(CONTENT_URI, true, myObserver)
+            }
+        }
+
         adapter = ListAdapter()
         adapter.notifyDataSetChanged()
         adapter.setOnItemClickCallback(object : ListAdapter.OnItemClickCallback {
@@ -55,33 +80,15 @@ class UserFragment : Fragment() {
             rvUsers.layoutManager = LinearLayoutManager(activity)
         }
 
-        when (type) {
-            HOME_TYPES[0] -> {
-                if (listViewModel.getListUser().value == null) {
-                    listViewModel.setUserFromApi(activity as FragmentActivity, toggleLoading)
-                }
-            }
-            HOME_TYPES[1] -> {
-                if (listViewModel.getListUser().value == null) {
-                    listViewModel.setUserFromLocal(activity as FragmentActivity)
-                }
-                val handlerThread = HandlerThread("DataObserver").apply {
-                    start()
-                }
-                val handler = Handler(handlerThread.looper)
-
-                val myObserver = object : ContentObserver(handler) {
-                    override fun onChange(selfChange: Boolean) {
-                        listViewModel.setUserFromLocal(activity as FragmentActivity)
-                    }
-                }
-                context?.contentResolver?.registerContentObserver(CONTENT_URI, true, myObserver)
-            }
-        }
-
         listViewModel.getListUser().observe(viewLifecycleOwner) { listUser ->
             if (listUser != null) {
-                adapter.setListUser(listUser)
+                when {
+                    listUser.size > 0 -> {
+                        adapter.setListUser(listUser)
+                        toggleNoData(false)
+                    }
+                    else -> toggleNoData(true)
+                }
             }
         }
     }
@@ -95,6 +102,23 @@ class UserFragment : Fragment() {
         when(state) {
             true -> binding.progressBar.visibility = View.VISIBLE
             else -> binding.progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private val toggleNoData: (Boolean) -> Unit = { state ->
+        when (state) {
+            true -> {
+                binding.apply {
+                    lottieNotFound.visibility = View.VISIBLE
+                    tvNoData.visibility = View.VISIBLE
+                }
+            }
+            else -> {
+                binding.apply {
+                    lottieNotFound.visibility = View.INVISIBLE
+                    tvNoData.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 

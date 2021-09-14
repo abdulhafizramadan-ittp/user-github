@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
     private val listUser = ArrayList<User>()
+
     private var onItemClickCallback: OnItemClickCallback? = null
 
     fun setListUser(listUser: ArrayList<User>) {

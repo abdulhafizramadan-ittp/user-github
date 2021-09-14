@@ -24,4 +24,5 @@
 
     <string name="notification_title">Daily Reminder</string>
     <string name="notification_description">Let search your favorite user github!</string>
+    <string name="no_data">No Data</string>
 </resources>
