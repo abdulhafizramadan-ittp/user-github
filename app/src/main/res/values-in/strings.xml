@@ -4,7 +4,6 @@
 
     <string name="list_title">Pengguna GitHub DiCoding</string>
     <string name="user_photo">Foto Pengguna</string>
-    <string name="search">Cari</string>
 
     <string name="content_description_user_photo">Foto Detail Pengguna</string>
     <string name="content_description_splash_screen">Logo Screen Awal</string>
@@ -24,4 +23,8 @@
 
     <string name="notification_title">Pengingat Harian</string>
     <string name="notification_description">Ayo cari pengguna github favoritmu!</string>
+
+    <string name="no_data">Tidak ada data</string>
+
+    <string name="search">Cari</string>
 </resources>

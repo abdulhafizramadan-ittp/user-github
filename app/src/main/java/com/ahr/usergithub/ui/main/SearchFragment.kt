@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.usergithub.MainActivity
+import com.ahr.usergithub.R
 import com.ahr.usergithub.adapter.ListAdapter
 import com.ahr.usergithub.databinding.FragmentSearchBinding
 import com.ahr.usergithub.model.User
@@ -57,9 +58,9 @@ class SearchFragment : Fragment() {
 
         binding.tieSearch.apply {
             requestFocus()
-            setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER)
-            setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == KeyEvent.KEYCODE_ENTER && binding.tieSearch.text.toString().isNotEmpty()) {
+            setImeActionLabel(getString(R.string.search), 0)
+            setOnEditorActionListener { _, _, _ ->
+                if (binding.tieSearch.text.toString().isNotEmpty()) {
                     listViewModel.setUserFromApi(activity as FragmentActivity, binding.tieSearch.text.toString(), toggleLoading)
                     toggleKeyboard(false)
                 }
@@ -103,8 +104,9 @@ class SearchFragment : Fragment() {
     private fun toggleKeyboard(state: Boolean) {
         when (state) {
             true -> inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-            else -> inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+            else -> inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
         }
+
     }
 
     private val toggleLoading: (Boolean) -> Unit = { state: Boolean ->

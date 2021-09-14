@@ -3,7 +3,6 @@
 
     <string name="list_title">User GitHub DiCoding</string>
     <string name="user_photo">User Photo</string>
-    <string name="search">search</string>
 
     <string name="content_description_user_photo">Photo Detail User</string>
     <string name="content_description_splash_screen">Splash Screen Logo</string>
@@ -24,5 +23,7 @@
 
     <string name="notification_title">Daily Reminder</string>
     <string name="notification_description">Let search your favorite user github!</string>
-    <string name="no_data">No Data</string>
+    <string name="no_data">No data</string>
+
+    <string name="search">Search</string>
 </resources>
