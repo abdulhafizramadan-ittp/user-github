@@ -139,14 +139,14 @@ class DetailFragment : Fragment() {
             true -> {
                 binding.apply {
                     appbar.visibility = View.INVISIBLE
-                    nestedScroll.visibility = View.INVISIBLE
+                    viewPager.visibility = View.INVISIBLE
                     progressBar.visibility = View.VISIBLE
                 }
             }
             else -> {
                 binding.apply {
                     appbar.visibility = View.VISIBLE
-                    nestedScroll.visibility = View.VISIBLE
+                    viewPager.visibility = View.VISIBLE
                     progressBar.visibility = View.INVISIBLE
                 }
             }
