@@ -122,6 +122,11 @@ class UserFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
 
         private const val ARGUMENT_TYPE = "argument_type"

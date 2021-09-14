@@ -61,8 +61,8 @@ class HomeFragment : Fragment() {
         Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_settingPreferences)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 

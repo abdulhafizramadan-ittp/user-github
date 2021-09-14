@@ -32,8 +32,8 @@ class SplashScreenFragment : Fragment() {
         }, 2000)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

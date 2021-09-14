@@ -12,7 +12,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import org.json.JSONObject
 
-class DetailViewModel : ViewModel(){
+class DetailViewModel : ViewModel() {
     private val user = MutableLiveData<UserDetail>()
 
     fun setUser(context: FragmentActivity,url: String, toggleLoading: (Boolean) -> Unit) {
@@ -59,8 +59,7 @@ class DetailViewModel : ViewModel(){
 
                     toggleLoading(false)
                 } catch (err: Exception) {
-                    toggleLoading(false)
-                    Toast.makeText(context, err.message, Toast.LENGTH_SHORT).show()
+                    err.printStackTrace()
                 }
             }
 

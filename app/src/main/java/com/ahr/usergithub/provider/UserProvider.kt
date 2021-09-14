@@ -44,6 +44,7 @@ class UserProvider : ContentProvider() {
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
         return when(uriMather.match(uri)) {
             USER -> userHelper.queryAll()
+            USER_USERNAME -> userHelper.queryByUsername(uri.lastPathSegment.toString())
             else -> null
         }
     }

@@ -48,8 +48,7 @@ class FollowViewModel : ViewModel() {
                     toggleLoading(false)
                     listFollow.postValue(list)
                 } catch (err: Exception) {
-                    toggleLoading(false)
-                    Toast.makeText(context, err.message, Toast.LENGTH_SHORT).show()
+                    err.printStackTrace()
                 }
             }
 

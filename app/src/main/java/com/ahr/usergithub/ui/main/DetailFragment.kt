@@ -20,7 +20,6 @@ import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.API_US
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.AVATAR
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.USERNAME
-import com.ahr.usergithub.database.UserHelper
 import com.ahr.usergithub.databinding.FragmentDetailBinding
 import com.ahr.usergithub.model.UserDetail
 import com.ahr.usergithub.viewmodel.DetailViewModel
@@ -32,8 +31,9 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var userUri: Uri
+
     private lateinit var detailViewModel: DetailViewModel
-    private lateinit var userHelper: UserHelper
     private var isFavorite = false
 
     override fun onCreateView(
@@ -47,12 +47,10 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userHelper = UserHelper.getInstance(activity?.applicationContext as Context)
-        userHelper.open()
-
         val (username, avatar, apiUser, apiFollower, apiFollowing) = DetailFragmentArgs.fromBundle(arguments as Bundle).user
 
-        checkIsFavorite(username)
+        userUri = Uri.parse("$CONTENT_URI/$username")
+        checkIsFavorite()
 
         detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
         if (detailViewModel.getUser().value == null) {
@@ -87,8 +85,7 @@ class DetailFragment : Fragment() {
                         Toast.makeText(context as Context, "$username added to favorite", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    val deleteWithUsername = Uri.parse("${CONTENT_URI}/$username")
-                    val result = context?.contentResolver?.delete(deleteWithUsername, null, null) as Int
+                    val result = context?.contentResolver?.delete(userUri, null, null) as Int
                     if (result > 0) {
                         toggleFavorite()
                         Toast.makeText(context as Context, "$username remove from favorite", Toast.LENGTH_SHORT).show()
@@ -118,11 +115,12 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun checkIsFavorite(username: String) {
-        val result = userHelper.queryByUsername(username).moveToFirst()
-        if (result) {
+    private fun checkIsFavorite() {
+        val result = context?.contentResolver?.query(userUri, null, null, null, null)
+        if (result?.moveToNext() as Boolean) {
             toggleFavorite()
         }
+        result.close()
     }
 
     private fun toggleFavorite() {
@@ -155,10 +153,9 @@ class DetailFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
-        userHelper.close()
     }
 
     companion object {
