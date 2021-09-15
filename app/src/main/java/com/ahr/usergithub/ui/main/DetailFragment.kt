@@ -47,23 +47,26 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val (username, avatar, apiUser, apiFollower, apiFollowing) = DetailFragmentArgs.fromBundle(arguments as Bundle).user
+        val (username, avatar, apiUser, apiFollower, apiFollow) = DetailFragmentArgs.fromBundle(arguments as Bundle).user
+        val apiFollowing = apiFollow.dropLast(13)
 
         userUri = Uri.parse("$CONTENT_URI/$username")
         checkIsFavorite()
 
         detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
         if (detailViewModel.getUser().value == null) {
-            detailViewModel.setUser(activity as FragmentActivity, apiUser, toggleLoading)
+            toggleLoading(true)
+            detailViewModel.setUser(activity as FragmentActivity, username)
         }
 
         detailViewModel.getUser().observe(viewLifecycleOwner) { user ->
             if (user != null) {
+                toggleLoading(false)
                 setupUserDetail(user)
             }
         }
 
-        val adapter = FollowsPagerAdapter(childFragmentManager, lifecycle).apply {
+        val adapter = FollowsPagerAdapter(context as Context, childFragmentManager, lifecycle).apply {
             setUrl(apiFollower)
             setUrl(apiFollowing)
         }
@@ -95,7 +98,7 @@ class DetailFragment : Fragment() {
         }
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = getString(TAB_TITLES[position])
+            tab.text = getString(TAB_TITLE[position])
         }.attach()
 
     }
@@ -160,7 +163,7 @@ class DetailFragment : Fragment() {
 
     companion object {
         @StringRes
-        private val TAB_TITLES = intArrayOf(
+        val TAB_TITLE = intArrayOf(
             R.string.follower,
             R.string.following
         )

@@ -6,66 +6,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ahr.usergithub.BuildConfig
+import com.ahr.usergithub.api.GithubUserApi
 import com.ahr.usergithub.model.UserDetail
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DetailViewModel : ViewModel() {
     private val user = MutableLiveData<UserDetail>()
 
-    fun setUser(context: FragmentActivity,url: String, toggleLoading: (Boolean) -> Unit) {
-        toggleLoading(true)
-        val token = BuildConfig.GITHUB_TOKEN
-
-        val client = AsyncHttpClient().apply {
-            addHeader("Authorization", token)
-            addHeader("User-Agent", "request")
-        }
-
-        client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
-                try {
-                    val result = String(responseBody as ByteArray)
-                    val jsonObject = JSONObject(result)
-
-                    val name = jsonObject.getString("name").let {
-                        if (it == "null") {
-                            jsonObject.getString("login")
-                        } else {
-                            it
-                        }
-                    }
-                    val description = jsonObject.getString("bio").let {
-                        if (it == "null") {
-                            "-"
-                        } else {
-                            it
-                        }
-                    }
-
-                    jsonObject.apply {
-                        user.postValue(UserDetail(
-                            getString("avatar_url"),
-                            name,
-                            description,
-                            getInt("public_repos"),
-                            getInt("followers"),
-                            getInt("following"),
-                            getInt("public_gists")
-                        ))
-                    }
-
-                    toggleLoading(false)
-                } catch (err: Exception) {
-                    err.printStackTrace()
-                }
+    fun setUser(context: FragmentActivity,username: String) {
+        GithubUserApi.instance.getUser(username).enqueue(object : Callback<UserDetail?> {
+            override fun onResponse(call: Call<UserDetail?>, response: Response<UserDetail?>) {
+                user.postValue(response.body())
             }
 
-            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
-                toggleLoading(false)
-                Toast.makeText(context, error?.message, Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<UserDetail?>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
             }
         })
     }

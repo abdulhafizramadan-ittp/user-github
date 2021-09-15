@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahr.usergithub.adapter.FollowAdapter
 import com.ahr.usergithub.databinding.FragmentFollowBinding
 import com.ahr.usergithub.viewmodel.FollowViewModel
+import java.util.*
 
 class FollowFragment : Fragment() {
 
@@ -33,10 +34,12 @@ class FollowFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val url = arguments?.getString(ARGUMENT_URL)
+        val type = (arguments?.getString(ARGUMENT_TYPE) as String).lowercase(Locale.getDefault())
 
         followViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowViewModel::class.java)
         if (followViewModel.getListFollow().value == null) {
-            followViewModel.setListFollow(activity as FragmentActivity, url as String, toggleLoading)
+            toggleLoading(true)
+            followViewModel.setListFollow(activity as FragmentActivity, url as String)
         }
 
         adapter = FollowAdapter()
@@ -48,24 +51,37 @@ class FollowFragment : Fragment() {
         }
 
         followViewModel.getListFollow().observe(viewLifecycleOwner) { listFollow ->
-            if (listFollow != null) {
-                when {
-                    listFollow.size > 0 -> {
-                        adapter.setFollow(listFollow)
-                        toggleNotFound(false)
+            when (listFollow) {
+                null -> {
+                    toggleLoading(false)
+                    toggleNotFound(message = "No internet connection", state = true)
+                }
+                else -> {
+                    when {
+                        listFollow.size > 0 -> {
+                            toggleLoading(false)
+                            toggleNotFound(state = false)
+                            adapter.setFollow(listFollow)
+                        }
+                        else -> {
+                            toggleLoading(false)
+                            toggleNotFound(message = "No $type", state = true)
+                        }
                     }
-                    else -> toggleNotFound(true)
                 }
             }
         }
     }
 
-    private val toggleNotFound: (Boolean) -> Unit = { state ->
+    private fun toggleNotFound(message: String = "", state: Boolean) {
         when (state) {
             true -> {
                 binding.apply {
                     lottieNotFound.visibility = View.VISIBLE
-                    tvNoData.visibility = View.VISIBLE
+                    tvNoData.apply {
+                        text = message
+                        visibility = View.VISIBLE
+                    }
                 }
             }
             else -> {
@@ -92,12 +108,16 @@ class FollowFragment : Fragment() {
 
     companion object {
 
+        private const val ARGUMENT_TYPE = "arg_type"
         private const val ARGUMENT_URL ="arg_url"
 
         @JvmStatic
-        fun newInstance(url: String) =
+        fun newInstance(type: String, url: String) =
             FollowFragment().apply {
-                arguments = bundleOf(ARGUMENT_URL to url)
+                arguments = bundleOf(
+                    ARGUMENT_TYPE to type,
+                    ARGUMENT_URL to url
+                )
             }
     }
 }

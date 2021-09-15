@@ -45,13 +45,13 @@ class UserFragment : Fragment() {
         when (type) {
             HOME_TYPES[0] -> {
                 if (listViewModel.getListUser().value == null) {
-                    listViewModel.setUserFromApi(context as Context, toggleLoading)
+                    listViewModel.setUserFromApi(context as Context)
+                    toggleLoading(true)
                 }
             }
             HOME_TYPES[1] -> {
                 if (listViewModel.getListUser().value == null) {
                     listViewModel.setUserFromLocal(context as Context)
-                    toggleNoData(true)
                 }
                 val handlerThread = HandlerThread("DataObserver").apply {
                     start()
@@ -81,13 +81,22 @@ class UserFragment : Fragment() {
         }
 
         listViewModel.getListUser().observe(viewLifecycleOwner) { listUser ->
-            if (listUser != null) {
-                when {
-                    listUser.size > 0 -> {
-                        adapter.setListUser(listUser)
-                        toggleNoData(false)
+            when (listUser) {
+                null -> {
+                    toggleLoading(false)
+                    toggleNoData("No internet connection", true)
+                }
+                else -> {
+                    when {
+                        listUser.size > 0 -> {
+                            toggleLoading(false)
+                            toggleNoData("", false)
+                            adapter.setListUser(listUser)
+                        }
+                        else -> {
+                            toggleNoData("No user favorite", true)
+                        }
                     }
-                    else -> toggleNoData(true)
                 }
             }
         }
@@ -105,12 +114,15 @@ class UserFragment : Fragment() {
         }
     }
 
-    private val toggleNoData: (Boolean) -> Unit = { state ->
+    private fun toggleNoData(message: String, state: Boolean) {
         when (state) {
             true -> {
                 binding.apply {
                     lottieNotFound.visibility = View.VISIBLE
-                    tvNoData.visibility = View.VISIBLE
+                    tvNoData.apply {
+                        text = message
+                        visibility = View.VISIBLE
+                    }
                 }
             }
             else -> {

@@ -61,7 +61,8 @@ class SearchFragment : Fragment() {
             setImeActionLabel(getString(R.string.search), 0)
             setOnEditorActionListener { _, _, _ ->
                 if (binding.tieSearch.text.toString().isNotEmpty()) {
-                    listViewModel.setUserFromApi(activity as FragmentActivity, binding.tieSearch.text.toString(), toggleLoading)
+                    toggleLoading(true)
+                    listViewModel.setUserFromApi(activity as FragmentActivity, binding.tieSearch.text.toString())
                     toggleKeyboard(false)
                 }
                 true
@@ -83,6 +84,7 @@ class SearchFragment : Fragment() {
 
         listViewModel.getListUser().observe(viewLifecycleOwner) { listUser ->
             if (listUser != null) {
+                toggleLoading(false)
                 adapter.setListUser(listUser)
             }
         }

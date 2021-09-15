@@ -5,109 +5,41 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ahr.usergithub.BuildConfig
+import com.ahr.usergithub.api.GithubUserApi
 import com.ahr.usergithub.database.DatabaseContract.UserColumns.Companion.CONTENT_URI
 import com.ahr.usergithub.helper.MappingHelper
+import com.ahr.usergithub.model.ResponseSearchUser
 import com.ahr.usergithub.model.User
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import org.json.JSONArray
-import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ListViewModel : ViewModel() {
 
-    private val listUser = MutableLiveData<ArrayList<User>>()
+    private var listUser = MutableLiveData<ArrayList<User>?>()
 
-    fun setUserFromApi(context: Context, toggleLoading: (Boolean) -> Unit) {
-        toggleLoading(true)
-
-        val token = BuildConfig.GITHUB_TOKEN
-        val url = "https://api.github.com/users"
-
-        val client = AsyncHttpClient().apply {
-            addHeader("Authorization", token)
-            addHeader("User-Agent", "request")
-        }
-
-        client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
-                try {
-                    val result = String(responseBody as ByteArray)
-                    val jsonArray = JSONArray(result)
-
-                    val list = ArrayList<User>()
-                    for (i in 0 until  jsonArray.length()) {
-                        jsonArray.getJSONObject(i).apply {
-                            val user = User(
-                                getString("login"),
-                                getString("avatar_url"),
-                                getString("url"),
-                                getString("followers_url"),
-                                getString("following_url").dropLast(13)
-                            )
-                            list.add(user)
-                        }
-                    }
-
-                    toggleLoading(false)
-                    listUser.postValue(list)
-                } catch (err: Exception) {
-                    toggleLoading(false)
-                    Toast.makeText(context, err.message, Toast.LENGTH_SHORT).show()
-                }
+    fun setUserFromApi(context: Context) {
+        GithubUserApi.instance.getUser().enqueue(object : Callback<ArrayList<User>> {
+            override fun onResponse(call: Call<ArrayList<User>?>, response: Response<ArrayList<User>>) {
+                listUser.postValue(response.body())
             }
 
-            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
-                toggleLoading(false)
-                Toast.makeText(context, error?.message, Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<ArrayList<User>?>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                listUser.postValue(null)
             }
         })
     }
 
-    fun setUserFromApi(context: Context, username: String, toggleLoading: (Boolean) -> Unit) {
-        toggleLoading(true)
-
-        val token = BuildConfig.GITHUB_TOKEN
-        val url = "https://api.github.com/search/users?q=$username"
-
-        val client = AsyncHttpClient().apply {
-            addHeader("Authorization", token)
-            addHeader("User-Agent", "request")
-        }
-
-        client.get(url, object : AsyncHttpResponseHandler() {
-
-            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
-                try {
-                    val result = String(responseBody as ByteArray)
-                    val jsonObject= JSONObject(result)
-                    val users = jsonObject.getJSONArray("items")
-                    val list = ArrayList<User>()
-
-                    for (i in 0 until  users.length()) {
-                        users.getJSONObject(i).apply {
-                            val user = User(
-                                getString("login"),
-                                getString("avatar_url"),
-                                getString("url"),
-                                getString("followers_url"),
-                                getString("following_url").dropLast(13)
-                            )
-                            list.add(user)
-                        }
-                    }
-                    toggleLoading(false)
-                    listUser.postValue(list)
-                } catch (err: Exception) {
-                    toggleLoading(false)
-                    Toast.makeText(context, err.message, Toast.LENGTH_SHORT).show()
-                }
+    fun setUserFromApi(context: Context, username: String) {
+        GithubUserApi.instance.getUserByUsername(username).enqueue(object : Callback<ResponseSearchUser?> {
+            override fun onResponse(call: Call<ResponseSearchUser?>, response: Response<ResponseSearchUser?>) {
+                listUser.postValue(response.body()?.listUsers)
             }
 
-            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
-                toggleLoading(false)
-                Toast.makeText(context, error?.message, Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<ResponseSearchUser?>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                listUser.postValue(null)
             }
         })
     }
@@ -118,5 +50,5 @@ class ListViewModel : ViewModel() {
         listUser.postValue(users)
     }
 
-    fun getListUser(): LiveData<ArrayList<User>> = listUser
+    fun getListUser(): LiveData<ArrayList<User>?> = listUser
 }
