@@ -47,8 +47,7 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val (username, avatar, apiUser, apiFollower, apiFollow) = DetailFragmentArgs.fromBundle(arguments as Bundle).user
-        val apiFollowing = apiFollow.dropLast(13)
+        val (username, avatar, apiUser, apiFollower, apiFollowing) = DetailFragmentArgs.fromBundle(arguments as Bundle).user
 
         userUri = Uri.parse("$CONTENT_URI/$username")
         checkIsFavorite()

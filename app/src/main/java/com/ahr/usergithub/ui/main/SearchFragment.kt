@@ -83,9 +83,21 @@ class SearchFragment : Fragment() {
         }
 
         listViewModel.getListUser().observe(viewLifecycleOwner) { listUser ->
-            if (listUser != null) {
-                toggleLoading(false)
-                adapter.setListUser(listUser)
+            when (listUser) {
+                null -> {
+                    toggleLoading(false)
+                    toggleNotFound(message = "No internet connection", state = true)
+                }
+                else -> {
+                    toggleLoading(false)
+                    when {
+                        listUser.size > 0 -> adapter.setListUser(listUser)
+                        else -> {
+                            toggleRvUser(false)
+                            toggleNotFound(message = "User not found", state = true)
+                        }
+                    }
+                }
             }
         }
     }
@@ -101,6 +113,33 @@ class SearchFragment : Fragment() {
     private fun toDetailFragment(user: User) {
         val  toDetailFragment = SearchFragmentDirections.actionSearchFragmentToDetailFragment(user)
         Navigation.findNavController(binding.root).navigate(toDetailFragment)
+    }
+
+    private fun toggleRvUser(state: Boolean) {
+        binding.rvUsers.visibility = when (state) {
+            true -> View.VISIBLE
+            else -> View.INVISIBLE
+        }
+    }
+
+    private fun toggleNotFound(message: String = "", state: Boolean) {
+        when (state) {
+            true -> {
+                binding.apply {
+                    lottieNotFound.visibility = View.VISIBLE
+                    tvNoData.apply {
+                        text = message
+                        visibility = View.VISIBLE
+                    }
+                }
+            }
+            else -> {
+                binding.apply {
+                    lottieNotFound.visibility = View.INVISIBLE
+                    tvNoData.visibility = View.INVISIBLE
+                }
+            }
+        }
     }
 
     private fun toggleKeyboard(state: Boolean) {

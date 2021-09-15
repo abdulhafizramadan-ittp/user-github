@@ -1,6 +1,7 @@
 package com.ahr.usergithub.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,13 +34,18 @@ class FollowFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val url = arguments?.getString(ARGUMENT_URL)
         val type = (arguments?.getString(ARGUMENT_TYPE) as String).lowercase(Locale.getDefault())
+        val url = when (type) {
+            "following" -> (arguments?.getString(ARGUMENT_URL) as String).dropLast(13)
+            else -> arguments?.getString(ARGUMENT_URL) as String
+        }
+
+        Log.d("FollowFragment", "onViewCreated: type = $type\nurl = $url")
 
         followViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowViewModel::class.java)
         if (followViewModel.getListFollow().value == null) {
             toggleLoading(true)
-            followViewModel.setListFollow(activity as FragmentActivity, url as String)
+            followViewModel.setListFollow(activity as FragmentActivity, url)
         }
 
         adapter = FollowAdapter()
@@ -57,16 +63,10 @@ class FollowFragment : Fragment() {
                     toggleNotFound(message = "No internet connection", state = true)
                 }
                 else -> {
+                    toggleLoading(false)
                     when {
-                        listFollow.size > 0 -> {
-                            toggleLoading(false)
-                            toggleNotFound(state = false)
-                            adapter.setFollow(listFollow)
-                        }
-                        else -> {
-                            toggleLoading(false)
-                            toggleNotFound(message = "No $type", state = true)
-                        }
+                        listFollow.size > 0 -> adapter.setFollow(listFollow)
+                        else -> toggleNotFound(message = "No $type", state = true)
                     }
                 }
             }
